@@ -1,0 +1,52 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code when working with this repository.
+
+## Overview
+
+`digital.vasic.ratelimiter` is a standalone Go module providing rate limiting implementations. It offers an in-memory sliding window limiter for single-instance deployments and a Redis-backed distributed limiter for multi-instance environments. An HTTP middleware adapter is included for easy integration with any `net/http` compatible router.
+
+## Commands
+
+```bash
+# Build all packages
+go build ./...
+
+# Run all tests
+go test ./... -count=1
+
+# Run tests with verbose output
+go test -v ./... -count=1
+
+# Run tests for a specific package
+go test -v ./pkg/memory/ -count=1
+
+# Run a single test
+go test -v -run TestAllowWithinLimit ./pkg/memory/
+```
+
+## Architecture
+
+```
+pkg/limiter/     - Core interfaces (Limiter, Config, Result)
+pkg/sliding/     - Sliding window counter algorithm
+pkg/memory/      - In-memory rate limiter (uses sliding window)
+pkg/redis/       - Redis-backed distributed rate limiter (Lua script)
+pkg/middleware/   - HTTP middleware adapter
+```
+
+**Data flow:** HTTP Middleware -> Limiter interface -> Memory or Redis implementation -> Sliding window algorithm
+
+**Key design decisions:**
+- The `Limiter` interface is the central abstraction; all implementations satisfy it.
+- The sliding window algorithm divides time into sub-windows for smooth rate limiting.
+- The Redis implementation uses an atomic Lua script to avoid race conditions.
+- The HTTP middleware is fail-open: on limiter errors, requests are allowed through.
+
+## Conventions
+
+- Functional options pattern for Redis limiter configuration (`WithPrefix`).
+- Table-driven tests throughout.
+- `*_test.go` files beside source files.
+- `context.Context` passed through all interface methods.
+- `EffectiveBurst()` centralizes the burst-defaults-to-rate logic.
