@@ -83,6 +83,8 @@ if useRedis {
 }
 ```
 
-## Summary
+## Practice Exercise
 
-The in-memory limiter is fast and dependency-free for single instances. The Redis limiter provides distributed rate limiting with atomic Lua scripts. Both implement the same `Limiter` interface, making backend selection a deployment decision rather than a code change.
+1. Create a `memory.RateLimiter` with rate=5 and a 1-second window. Call `Allow` 5 times for the same key and verify all succeed. Call a 6th time and verify it is rejected. Call `Reset` for that key and verify the next `Allow` succeeds again. Remember to call `Stop()` when done.
+2. Write a test that creates two different keys ("user:alice" and "user:bob") with the in-memory limiter. Exhaust the limit for "user:alice" and verify "user:bob" still has its full allowance. This confirms per-key isolation.
+3. Implement a function that accepts a `limiter.Limiter` interface and runs a load test against it. Instantiate it once with `memory.New` and once with `redis.New` (if Redis is available). Verify both return consistent `Result` values for the same sequence of calls. This demonstrates backend interchangeability.

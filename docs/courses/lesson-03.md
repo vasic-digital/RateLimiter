@@ -100,6 +100,8 @@ err := arl.Execute(ctx, func(ctx context.Context) error {
 fmt.Printf("Current rate: %d\n", arl.CurrentRate())
 ```
 
-## Summary
+## Practice Exercise
 
-The middleware packages provide drop-in rate limiting for HTTP and Gin. The token bucket handles burst scenarios. The throttler provides simple per-operation limits. The adaptive limiter automatically adjusts to the health of external dependencies, backing off when they struggle and ramping up when they recover.
+1. Create an `http.HandlerFunc` that returns 200 OK. Wrap it with `middleware.HTTPMiddleware` using a `memory.RateLimiter` (rate=3, window=1s). Use `httptest.NewRecorder` to send 4 requests and verify the first 3 return 200 with correct `X-RateLimit-Remaining` headers (2, 1, 0) and the 4th returns 429.
+2. Create a `tokenbucket.TokenBucket` with capacity=5 and refill rate=1 token/sec. Call `TryAcquire` 5 times (all should succeed). Call a 6th time (should fail). Wait 1 second and call again (should succeed as one token has refilled). Verify `AvailableTokens()` returns the expected count at each step.
+3. Create an `adaptive.AdaptiveRateLimiter` with initial=10, min=5, max=20. Call `Execute` with a function that always succeeds 15 times. Verify `CurrentRate()` has increased above 10. Then call `Execute` with a function that always fails 10 times. Verify `CurrentRate()` has decreased. Confirm the rate never drops below 5 or exceeds 20.
