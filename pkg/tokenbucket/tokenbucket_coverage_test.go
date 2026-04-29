@@ -128,6 +128,7 @@ func TestConcurrent_TryAcquire(t *testing.T) {
 
 // TestConcurrent_AvailableTokens verifies thread safety of AvailableTokens.
 func TestConcurrent_AvailableTokens(t *testing.T) {
+	// bluff-scan: no-assert-ok (concurrency test — go test -race catches data races; absence of panic == correctness)
 	tb := New(100, 10.0)
 	var wg sync.WaitGroup
 

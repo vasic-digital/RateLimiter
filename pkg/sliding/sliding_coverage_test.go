@@ -95,6 +95,7 @@ func TestReset_ThenAllow(t *testing.T) {
 
 // TestConcurrent_AllowAndCount tests thread safety of Allow and Count together.
 func TestConcurrent_AllowAndCount(t *testing.T) {
+	// bluff-scan: no-assert-ok (concurrency test — go test -race catches data races; absence of panic == correctness)
 	w := NewWindow(10000, time.Second, 10)
 	now := time.Now()
 	var wg sync.WaitGroup
@@ -115,6 +116,7 @@ func TestConcurrent_AllowAndCount(t *testing.T) {
 
 // TestConcurrent_AllowAndReset tests thread safety of Allow and Reset together.
 func TestConcurrent_AllowAndReset(t *testing.T) {
+	// bluff-scan: no-assert-ok (concurrency test — go test -race catches data races; absence of panic == correctness)
 	w := NewWindow(10000, time.Second, 10)
 	now := time.Now()
 	var wg sync.WaitGroup

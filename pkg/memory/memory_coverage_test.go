@@ -248,6 +248,7 @@ func TestAllow_WindowRecovery(t *testing.T) {
 
 // TestConcurrentAllowAndReset verifies thread safety of Allow and Reset together.
 func TestConcurrentAllowAndReset(t *testing.T) {
+	// bluff-scan: no-assert-ok (concurrency test — go test -race catches data races; absence of panic == correctness)
 	cfg := &limiter.Config{
 		Rate:   100,
 		Window: time.Second,

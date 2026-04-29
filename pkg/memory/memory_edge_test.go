@@ -209,6 +209,7 @@ func TestRateLimiter_ManyDistinctKeys(t *testing.T) {
 }
 
 func TestRateLimiter_ConcurrentResetAndAllow(t *testing.T) {
+	// bluff-scan: no-assert-ok (concurrency test — go test -race catches data races; absence of panic == correctness)
 	t.Parallel()
 
 	cfg := &limiter.Config{

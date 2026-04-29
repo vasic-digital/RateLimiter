@@ -56,6 +56,7 @@ func TestClear_NonExistentKey(t *testing.T) {
 
 // TestConcurrent_TryThrottle verifies thread safety under concurrent access.
 func TestConcurrent_TryThrottle(t *testing.T) {
+	// bluff-scan: no-assert-ok (concurrency test — go test -race catches data races; absence of panic == correctness)
 	th := New(time.Minute, 1000)
 	var wg sync.WaitGroup
 
@@ -73,6 +74,7 @@ func TestConcurrent_TryThrottle(t *testing.T) {
 
 // TestConcurrent_TryThrottleAndClear tests thread safety of TryThrottle and Clear.
 func TestConcurrent_TryThrottleAndClear(t *testing.T) {
+	// bluff-scan: no-assert-ok (concurrency test — go test -race catches data races; absence of panic == correctness)
 	th := New(time.Minute, 100)
 	var wg sync.WaitGroup
 
