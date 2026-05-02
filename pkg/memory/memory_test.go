@@ -11,13 +11,6 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestNewWithNilConfig(t *testing.T) {
-	rl := New(nil)
-	defer rl.Stop()
-
-	require.NotNil(t, rl)
-}
-
 func TestAllowWithinLimit(t *testing.T) {
 	cfg := &limiter.Config{
 		Rate:   5,

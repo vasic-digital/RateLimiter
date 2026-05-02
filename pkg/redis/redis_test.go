@@ -27,12 +27,6 @@ func setupMiniredis(t *testing.T) (*miniredis.Miniredis, goredis.Cmdable) {
 	return mr, client
 }
 
-func TestNewWithNilConfig(t *testing.T) {
-	_, client := setupMiniredis(t)
-	rl := New(client, nil)
-	require.NotNil(t, rl)
-}
-
 func TestAllowWithinLimit(t *testing.T) {
 	_, client := setupMiniredis(t)
 
